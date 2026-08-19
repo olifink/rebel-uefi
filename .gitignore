@@ -1,0 +1,20 @@
+# Build artifacts
+*.o
+*.so
+*.efi
+*.EFI
+
+# Disk & NVRAM images
+*.img
+*.fd
+my_vars.fd
+
+# Logs & temp files
+*.log
+*~
+*.swp
+
+# IDE & OS files
+.vscode/
+.idea/
+.DS_Store

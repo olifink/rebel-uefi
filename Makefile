@@ -1,4 +1,14 @@
-ARCH            = x86_64
+ARCH            ?= x86_64
+HOST_ARCH       := $(shell uname -m)
+
+ifneq ($(HOST_ARCH),x86_64)
+CROSS_COMPILE   ?= x86_64-linux-gnu-
+endif
+
+CC              = $(CROSS_COMPILE)gcc
+LD              = $(CROSS_COMPILE)ld
+OBJCOPY         = $(CROSS_COMPILE)objcopy
+
 OBJS            = main.o
 TARGET          = REBEL.EFI
 
@@ -17,13 +27,13 @@ LDFLAGS         = -shared -Bsymbolic -L$(EFILIB) -L$(LIB) \
 all: $(TARGET)
 
 %.o: %.c
-	gcc $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 rebel.so: $(OBJS)
-	ld $(LDFLAGS) $(OBJS) -o $@ -lgnuefi -lefi
+	$(LD) $(LDFLAGS) $(OBJS) -o $@ -lgnuefi -lefi
 
 $(TARGET): rebel.so
-	objcopy -j .text -j .sdata -j .data -j .dynamic \
+	$(OBJCOPY) -j .text -j .sdata -j .data -j .dynamic \
 		-j .dynsym  -j .rel -j .rela -j .reloc -j .rodata \
 		--target=efi-app-$(ARCH) rebel.so $@
 

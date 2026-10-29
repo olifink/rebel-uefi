@@ -9,6 +9,9 @@
 *.fd
 my_vars.fd
 
+# USB export
+usb/
+
 # Logs & temp files
 *.log
 *~

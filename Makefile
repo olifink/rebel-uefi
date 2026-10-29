@@ -11,6 +11,7 @@ OBJCOPY         = $(CROSS_COMPILE)objcopy
 
 OBJS            = main.o
 TARGET          = REBEL.EFI
+USB_DIR         = usb
 
 EFIINC          = /usr/include/efi
 EFIINCS         = -I$(EFIINC) -I$(EFIINC)/$(ARCH) -I$(EFIINC)/protocol
@@ -37,6 +38,13 @@ $(TARGET): rebel.so
 		-j .dynsym  -j .rel -j .rela -j .reloc -j .rodata \
 		--target=efi-app-$(ARCH) rebel.so $@
 
+usb: $(TARGET)
+	mkdir -p $(USB_DIR)/EFI/BOOT
+	cp $(TARGET) $(USB_DIR)/EFI/BOOT/BOOTX64.EFI
+	cp $(TARGET) $(USB_DIR)/EFI/BOOT/
+
 clean:
-	rm -f *.o *.so $(TARGET)
+	rm -rf *.o *.so $(TARGET) $(USB_DIR)
+
+.PHONY: all clean usb
 
